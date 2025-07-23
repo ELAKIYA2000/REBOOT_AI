@@ -7,8 +7,7 @@ app = Flask(__name__)
 
 @app.route('/check-compatibility', methods=['POST'])
 def check_compatibility():
-    data = request.get_json()
-    repo_url = data.get("repoUrl")
+    repo_url = request.args.get("repoUrl")
 
     if not repo_url:
         return jsonify({"error": "repoUrl is required"}), 400
@@ -37,8 +36,10 @@ def check_compatibility():
             "currentVersion": current_version,
             "latestVersion": latest_version,
             "compatibilityFlag": compatibility_flag,
-            "compatibilitySummary": summary
+            "compatibilitySummary": summary,
+            "status": "update available" if latest_version != current_version else "up to date"
         })
+        
 
     return jsonify(results), 200
 
