@@ -13,6 +13,6 @@ genai.configure(api_key="XXX")
 
 def summarize_with_gemini(text):
     model = genai.GenerativeModel("gemini-1.5-flash")
-    prompt = f"Summarize the following changelog in 3 bullet points:\n\n{text}"
+    prompt = f"Summarize the following changelog :\n\n{text}"
     response = model.generate_content(prompt)
     return response.text
