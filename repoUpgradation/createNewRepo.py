@@ -14,7 +14,7 @@ def handle_remove_readonly(func, path, exc):
         raise exc
 
 
-def update_hello_file_and_push(repo_url, branch_name, file_name="hello.txt", new_line="Elakiya here!"):
+def update_hello_file_and_push(repo_url, branch_name, file_name="hello.txt", new_line="Elakiya here Testing again!"):
     repo_dir = "./temp_repo"
     
     file_path = os.path.join(repo_dir, file_name)
@@ -80,7 +80,7 @@ def update_hello_file_and_push(repo_url, branch_name, file_name="hello.txt", new
 # 🔁 Example usage
 if __name__ == "__main__":
     repo_url = "https://github.com/ELAKIYA2000/Personal"  # Replace with your repo
-    branch = "feature/hello-update-new"
+    branch = "feature/elakiya-update"
 
     result = update_hello_file_and_push(repo_url, branch)
     print(result)

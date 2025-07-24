@@ -1,11 +1,10 @@
 from fastapi import HTTPException
-import requests
 from git import Repo, GitCommandError
 import os
 import shutil
 import stat
 
-from flask import Flask, request, jsonify
+from flask import Flask, request
 
 app = Flask(__name__)
 
@@ -66,9 +65,14 @@ def update_hello_file_and_push(repo_url, branch_name, file_name, new_line):
         except Exception:
             pass
 
+        # Explicitly close the repo to release file handles
+        try:
+            repo.close()
+        except Exception:
+            pass
+
         if os.path.exists(repo_dir):
             shutil.rmtree(repo_dir, onexc=handle_remove_readonly)
-
 
 @app.route('/update-repo', methods=['POST'])
 def update_repo():
