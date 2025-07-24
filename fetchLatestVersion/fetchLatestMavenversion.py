@@ -2,8 +2,10 @@ from flask import Flask, request, jsonify
 import requests
 import xml.etree.ElementTree as ET
 from urllib.parse import urlparse
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/check-compatibility', methods=['POST'])
 def check_compatibility():
