@@ -41,7 +41,7 @@ def update_pom_versions(pom_path, dependencies):
 def upgrade_dependencies(payload):
     temp_dir = tempfile.mkdtemp()
     try:
-        repo_url = payload.get("repo_url")
+        repo_url = payload.get("repoUrl")
         deps = payload.get("dependencies")
 
         if not repo_url or not deps:

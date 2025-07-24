@@ -115,5 +115,5 @@ def compare_versions(current, latest):
         return False, f"Incompatible: Major version changed from {current_major} to {latest_major}"
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(port=8080)

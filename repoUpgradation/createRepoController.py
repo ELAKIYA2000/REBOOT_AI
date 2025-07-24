@@ -4,10 +4,12 @@ import os
 import shutil
 import stat
 from createUpdatePomFile import upgrade_dependencies
+from flask_cors import CORS
 
 from flask import Flask, request
 
 app = Flask(__name__)
+CORS(app)
 
 import os
 import shutil
@@ -76,8 +78,8 @@ def update_pom_and_push(repo_url, branch_name, new_pom_content, file_name="pom.x
 @app.route('/update-repo', methods=['POST'])
 def update_repo():
     req = request.get_json()
-    repo_url = req["repo_url"]
-    branch_name = req["branch_name"]    
+    repo_url = req["repoUrl"]
+    branch_name = 'smartporter-upgrade'
     try:
         new_line = upgrade_dependencies(req)  # returns string now
         result = update_pom_and_push(repo_url, branch_name, new_line)
