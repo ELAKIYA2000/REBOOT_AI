@@ -2,7 +2,7 @@ from flask import Flask, request, send_file, jsonify
 import xml.etree.ElementTree as ET
 import tempfile, os, shutil, subprocess, json
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
 def clone_repo(repo_url, dest_dir):
     subprocess.run(["git", "clone", "--depth", "1", repo_url, dest_dir], check=True)
@@ -37,34 +37,34 @@ def update_pom_versions(pom_path, dependencies):
     tree.write(pom_path, encoding="utf-8", xml_declaration=True)
     return pom_path
 
-@app.route("/upgrade-dependencies", methods=["POST"])
-def upgrade_dependencies():
+# @app.route("/upgrade-dependencies", methods=["POST"])
+def upgrade_dependencies(payload):
+    temp_dir = tempfile.mkdtemp()
     try:
-        payload = request.get_json(force=True)
-        repo_url = payload.get("repoUrl")
+        repo_url = payload.get("repo_url")
         deps = payload.get("dependencies")
-        if not repo_url or not deps:
-            return jsonify({"error": "repoUrl and dependencies are required"}), 400
 
-        temp_dir = tempfile.mkdtemp()
+        if not repo_url or not deps:
+            raise ValueError("repo_url and dependencies are required")
+
         clone_repo(repo_url, temp_dir)
 
         pom_path = os.path.join(temp_dir, "pom.xml")
         if not os.path.exists(pom_path):
-            return jsonify({"error": "pom.xml not found in repo root"}), 404
+            raise FileNotFoundError("pom.xml not found in repo root")
 
         update_pom_versions(pom_path, deps)
 
-        return send_file(pom_path,
-                         as_attachment=True,
-                         download_name="updated_pom.xml",
-                         mimetype="application/xml")
+        # ✅ Return the updated pom.xml content as a string
+        with open(pom_path, 'r', encoding='utf-8') as f:
+            return f.read()
+
     except subprocess.CalledProcessError as e:
-        return jsonify({"error": f"Git clone failed: {str(e)}"}), 500
+        raise Exception(f"Git clone failed: {str(e)}")
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        raise Exception(str(e))
     finally:
         shutil.rmtree(temp_dir, ignore_errors=True)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)
